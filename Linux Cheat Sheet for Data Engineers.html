@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Linux Cheat Sheet for Data Engineers.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> or <div class="page"></div> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+<style>
+/* Dark mode overrides */
+.vscode-dark, body.vscode-dark { background-color: #0b1220; color: #cdd6e6; }
+.vscode-dark a { color: #58a6ff; }
+.vscode-dark pre, .vscode-dark .hljs { background-color: #011627 !important; color: #cdd6e6 !important; border-color: rgba(255,255,255,0.06) !important; }
+.vscode-dark table > thead > tr > th, .vscode-dark hr, .vscode-dark table > tbody > tr + tr > td { border-color: rgba(255,255,255,0.06) !important; }
+.vscode-dark blockquote { background: rgba(255,255,255,0.02); border-left-color: rgba(255,255,255,0.12); color: #9aa4b2; }
+.vscode-dark code { color: #9cdcfe; background: transparent; }
+.vscode-dark img { filter: brightness(0.95) contrast(0.9); }
+</style>
+</head>
+<body class="vscode-dark">
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="linux-cheat-sheet-for-data-engineers">Linux Cheat Sheet for Data Engineers</h1>
+<hr>
+<h1 id="1-system-information">1. System Information</h1>
+<pre class="hljs"><code><div><span class="hljs-built_in">pwd</span>                 <span class="hljs-comment"># Present working directory</span>
+<span class="hljs-built_in">uname</span> -a            <span class="hljs-comment"># System/kernel information</span>
+<span class="hljs-built_in">whoami</span>              <span class="hljs-comment"># Current user</span>
+<span class="hljs-built_in">history</span>             <span class="hljs-comment"># Command history</span>
+</div></code></pre>
+<hr>
+<h1 id="2-directory-operations">2. Directory Operations</h1>
+<pre class="hljs"><code><div><span class="hljs-built_in">mkdir</span> folder_name               <span class="hljs-comment"># Create directory</span>
+<span class="hljs-built_in">mkdir</span> -p a/b/c                  <span class="hljs-comment"># Create nested directories</span>
+
+<span class="hljs-built_in">cd</span> folder_name                  <span class="hljs-comment"># Change directory</span>
+<span class="hljs-built_in">cd</span> ..                           <span class="hljs-comment"># Move one level up</span>
+<span class="hljs-built_in">cd</span> ~                            <span class="hljs-comment"># Home directory</span>
+<span class="hljs-built_in">cd</span>                              <span class="hljs-comment"># Home directory</span>
+</div></code></pre>
+<hr>
+<h1 id="3-listing-files">3. Listing Files</h1>
+<pre class="hljs"><code><div><span class="hljs-built_in">ls</span>                              <span class="hljs-comment"># List files</span>
+
+<span class="hljs-built_in">ls</span> -l                           <span class="hljs-comment"># Long format</span>
+<span class="hljs-built_in">ls</span> -a                           <span class="hljs-comment"># Hidden files</span>
+<span class="hljs-built_in">ls</span> -al                          <span class="hljs-comment"># Hidden + long format</span>
+<span class="hljs-built_in">ls</span> -t                           <span class="hljs-comment"># Sort by modified time</span>
+<span class="hljs-built_in">ls</span> -r                           <span class="hljs-comment"># Reverse order</span>
+<span class="hljs-built_in">ls</span> -S                           <span class="hljs-comment"># Sort by file size</span>
+</div></code></pre>
+<hr>
+<h1 id="4-file-creation--editing">4. File Creation &amp; Editing</h1>
+<pre class="hljs"><code><div><span class="hljs-built_in">touch</span> file.txt                  <span class="hljs-comment"># Create empty file</span>
+
+nano file.txt                   <span class="hljs-comment"># Open Nano editor</span>
+vi file.txt                     <span class="hljs-comment"># Open Vim editor</span>
+</div></code></pre>
+<hr>
+<h1 id="5-file-viewing">5. File Viewing</h1>
+<pre class="hljs"><code><div><span class="hljs-built_in">cat</span> file.txt                    <span class="hljs-comment"># Display file content</span>
+
+<span class="hljs-built_in">head</span> file.txt                   <span class="hljs-comment"># First 10 lines</span>
+<span class="hljs-built_in">head</span> -20 file.txt               <span class="hljs-comment"># First 20 lines</span>
+
+<span class="hljs-built_in">tail</span> file.txt                   <span class="hljs-comment"># Last 10 lines</span>
+<span class="hljs-built_in">tail</span> -f file.txt                <span class="hljs-comment"># Live monitoring</span>
+</div></code></pre>
+<hr>
+<h1 id="6-copy-move--rename">6. Copy, Move &amp; Rename</h1>
+<pre class="hljs"><code><div><span class="hljs-built_in">cp</span> file1.txt backup.txt         <span class="hljs-comment"># Copy file</span>
+
+<span class="hljs-built_in">cp</span> -r dir1 dir2                 <span class="hljs-comment"># Copy directory</span>
+
+<span class="hljs-built_in">mv</span> old.txt new.txt              <span class="hljs-comment"># Rename file</span>
+
+<span class="hljs-built_in">mv</span> file.txt /target/path        <span class="hljs-comment"># Move file</span>
+</div></code></pre>
+<hr>
+<h1 id="7-delete-operations">7. Delete Operations</h1>
+<pre class="hljs"><code><div><span class="hljs-built_in">rm</span> file.txt                     <span class="hljs-comment"># Delete file</span>
+
+<span class="hljs-built_in">rm</span> -r folder                    <span class="hljs-comment"># Delete directory</span>
+
+<span class="hljs-built_in">rm</span> -rf folder                   <span class="hljs-comment"># Force delete directory</span>
+
+<span class="hljs-built_in">rm</span> *.txt                        <span class="hljs-comment"># Delete all txt files</span>
+</div></code></pre>
+<hr>
+<h1 id="8-append-data">8. Append Data</h1>
+<pre class="hljs"><code><div><span class="hljs-built_in">cat</span> file1.txt &gt;&gt; file2.txt
+
+<span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;Hello World&quot;</span> &gt;&gt; file.txt
+
+<span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;Data Engineering&quot;</span> &gt; file.txt
+</div></code></pre>
+<hr>
+<h1 id="9-install-packages">9. Install Packages</h1>
+<pre class="hljs"><code><div><span class="hljs-built_in">sudo</span> apt-get update
+
+<span class="hljs-built_in">sudo</span> apt-get install package_name
+</div></code></pre>
+<p>Example:</p>
+<pre class="hljs"><code><div><span class="hljs-built_in">sudo</span> apt-get install wget
+</div></code></pre>
+<hr>
+<h1 id="10-links">10. Links</h1>
+<h2 id="hard-link">Hard Link</h2>
+<pre class="hljs"><code><div><span class="hljs-built_in">ln</span> original.txt hardlink.txt
+</div></code></pre>
+<h2 id="soft-link-shortcut">Soft Link (Shortcut)</h2>
+<pre class="hljs"><code><div><span class="hljs-built_in">ln</span> -s original.txt shortcut.txt
+</div></code></pre>
+<hr>
+<h1 id="11-bash-configuration">11. Bash Configuration</h1>
+<pre class="hljs"><code><div>nano ~/.bashrc
+</div></code></pre>
+<p>Reload:</p>
+<pre class="hljs"><code><div><span class="hljs-built_in">source</span> ~/.bashrc
+</div></code></pre>
+<hr>
+<h1 id="12-aliases">12. Aliases</h1>
+<pre class="hljs"><code><div><span class="hljs-built_in">alias</span> ll=<span class="hljs-string">&#x27;ls -al&#x27;</span>
+
+<span class="hljs-built_in">alias</span> gs=<span class="hljs-string">&#x27;git status&#x27;</span>
+</div></code></pre>
+<p>View aliases:</p>
+<pre class="hljs"><code><div><span class="hljs-built_in">alias</span>
+</div></code></pre>
+<hr>
+<h1 id="13-background-execution">13. Background Execution</h1>
+<pre class="hljs"><code><div><span class="hljs-built_in">nohup</span> python app.py &amp;
+</div></code></pre>
+<p>Output goes to:</p>
+<pre class="hljs"><code><div>nohup.out
+</div></code></pre>
+<hr>
+<h1 id="14-process-monitoring">14. Process Monitoring</h1>
+<pre class="hljs"><code><div>top                         <span class="hljs-comment"># Live processes</span>
+
+ps                          <span class="hljs-comment"># Current shell processes</span>
+
+ps -aux                     <span class="hljs-comment"># All running processes</span>
+</div></code></pre>
+<p>Kill process:</p>
+<pre class="hljs"><code><div><span class="hljs-built_in">kill</span> -9 &lt;PID&gt;
+</div></code></pre>
+<p>Example:</p>
+<pre class="hljs"><code><div><span class="hljs-built_in">kill</span> -9 12345
+</div></code></pre>
+<hr>
+<h1 id="15-download-files">15. Download Files</h1>
+<pre class="hljs"><code><div>wget <span class="hljs-string">&quot;https://example.com/file.zip&quot;</span>
+</div></code></pre>
+<hr>
+<h1 id="16-disk-usage">16. Disk Usage</h1>
+<pre class="hljs"><code><div><span class="hljs-built_in">df</span> -h                        <span class="hljs-comment"># Available disk space</span>
+
+<span class="hljs-built_in">du</span> -sh filename              <span class="hljs-comment"># File/folder size</span>
+</div></code></pre>
+<p>Examples:</p>
+<pre class="hljs"><code><div><span class="hljs-built_in">du</span> -sh data.csv
+
+<span class="hljs-built_in">du</span> -sh logs/
+</div></code></pre>
+<hr>
+<h1 id="17-memory-usage">17. Memory Usage</h1>
+<pre class="hljs"><code><div>free -m                      <span class="hljs-comment"># Memory in MB</span>
+
+free -g                      <span class="hljs-comment"># Memory in GB</span>
+</div></code></pre>
+<hr>
+<h1 id="18-compression">18. Compression</h1>
+<h2 id="zip">ZIP</h2>
+<pre class="hljs"><code><div>zip file.zip file.txt
+
+zip -r project.zip project/
+</div></code></pre>
+<h2 id="unzip">UNZIP</h2>
+<pre class="hljs"><code><div>unzip project.zip
+</div></code></pre>
+<hr>
+<h1 id="19-tar-compression">19. TAR Compression</h1>
+<h2 id="create">Create</h2>
+<pre class="hljs"><code><div>tar -czvf backup.tar.gz folder/
+</div></code></pre>
+<p>Options:</p>
+<ul>
+<li>c = create</li>
+<li>z = gzip</li>
+<li>v = verbose</li>
+<li>f = file</li>
+</ul>
+<h2 id="extract">Extract</h2>
+<pre class="hljs"><code><div>tar -zxvf backup.tar.gz
+</div></code></pre>
+<hr>
+<h1 id="20-word-count">20. Word Count</h1>
+<pre class="hljs"><code><div><span class="hljs-built_in">wc</span> file.txt
+</div></code></pre>
+<p>Specific counts:</p>
+<pre class="hljs"><code><div><span class="hljs-built_in">wc</span> -w file.txt      <span class="hljs-comment"># Words</span>
+
+<span class="hljs-built_in">wc</span> -l file.txt      <span class="hljs-comment"># Lines</span>
+
+<span class="hljs-built_in">wc</span> -c file.txt      <span class="hljs-comment"># Characters</span>
+</div></code></pre>
+<hr>
+<h1 id="21-sorting">21. Sorting</h1>
+<pre class="hljs"><code><div><span class="hljs-built_in">sort</span> data.txt
+</div></code></pre>
+<p>Reverse:</p>
+<pre class="hljs"><code><div><span class="hljs-built_in">sort</span> -r data.txt
+</div></code></pre>
+<p>Numeric:</p>
+<pre class="hljs"><code><div><span class="hljs-built_in">sort</span> -n data.txt
+</div></code></pre>
+<p>Numeric Reverse:</p>
+<pre class="hljs"><code><div><span class="hljs-built_in">sort</span> -nr data.txt
+</div></code></pre>
+<hr>
+<h1 id="22-grep-most-important-for-data-engineers">22. Grep (Most Important for Data Engineers)</h1>
+<p>Basic:</p>
+<pre class="hljs"><code><div>grep ERROR logfile.log
+</div></code></pre>
+<p>Ignore case:</p>
+<pre class="hljs"><code><div>grep -i error logfile.log
+</div></code></pre>
+<p>Search all txt files:</p>
+<pre class="hljs"><code><div>grep <span class="hljs-string">&quot;data&quot;</span> *.txt
+</div></code></pre>
+<p>Recursive search:</p>
+<pre class="hljs"><code><div>grep -r <span class="hljs-string">&quot;spark&quot;</span> .
+</div></code></pre>
+<p>Regex search:</p>
+<pre class="hljs"><code><div>grep <span class="hljs-string">&quot;^[0-9]&quot;</span> data.txt
+</div></code></pre>
+<p>Common Examples:</p>
+<pre class="hljs"><code><div>grep <span class="hljs-string">&quot;FAILED&quot;</span> application.log
+
+grep -i <span class="hljs-string">&quot;exception&quot;</span> application.log
+
+grep -r <span class="hljs-string">&quot;password&quot;</span> .
+</div></code></pre>
+<hr>
+<h1 id="23-find-command">23. Find Command</h1>
+<p>Find file:</p>
+<pre class="hljs"><code><div>find . -name file.txt
+</div></code></pre>
+<p>Find all txt files:</p>
+<pre class="hljs"><code><div>find . -name <span class="hljs-string">&quot;*.txt&quot;</span>
+</div></code></pre>
+<p>Find empty files:</p>
+<pre class="hljs"><code><div>find . -empty
+</div></code></pre>
+<p>Delete all txt files:</p>
+<pre class="hljs"><code><div>find . -name <span class="hljs-string">&quot;*.txt&quot;</span> -delete
+</div></code></pre>
+<p>Find directories:</p>
+<pre class="hljs"><code><div>find . -<span class="hljs-built_in">type</span> d
+</div></code></pre>
+<p>Find files:</p>
+<pre class="hljs"><code><div>find . -<span class="hljs-built_in">type</span> f
+</div></code></pre>
+<hr>
+<h1 id="24-awk-very-important-for-etldata-engineering">24. AWK (Very Important for ETL/Data Engineering)</h1>
+<p>Sample File:</p>
+<pre class="hljs"><code><div>101 John 50000
+102 Alice 60000
+103 Bob 70000
+</div></code></pre>
+<p>Print entire row:</p>
+<pre class="hljs"><code><div>awk <span class="hljs-string">&#x27;{print}&#x27;</span> data.txt
+</div></code></pre>
+<p>Print first column:</p>
+<pre class="hljs"><code><div>awk <span class="hljs-string">&#x27;{print $1}&#x27;</span> data.txt
+</div></code></pre>
+<p>Print second column:</p>
+<pre class="hljs"><code><div>awk <span class="hljs-string">&#x27;{print $2}&#x27;</span> data.txt
+</div></code></pre>
+<p>Print multiple columns:</p>
+<pre class="hljs"><code><div>awk <span class="hljs-string">&#x27;{print $1,$3}&#x27;</span> data.txt
+</div></code></pre>
+<p>Filter records:</p>
+<pre class="hljs"><code><div>awk <span class="hljs-string">&#x27;$3 &gt; 60000&#x27;</span> data.txt
+</div></code></pre>
+<p>Sum column:</p>
+<pre class="hljs"><code><div>awk <span class="hljs-string">&#x27;{sum+=$3} END {print sum}&#x27;</span> data.txt
+</div></code></pre>
+<p>Average:</p>
+<pre class="hljs"><code><div>awk <span class="hljs-string">&#x27;{sum+=$3} END {print sum/NR}&#x27;</span> data.txt
+</div></code></pre>
+<hr>
+<h1 id="25-file-permissions">25. File Permissions</h1>
+<pre class="hljs"><code><div>r = 4
+w = 2
+x = 1
+</div></code></pre>
+<p>Calculation:</p>
+<pre class="hljs"><code><div>7 = rwx = 4+2+1
+
+6 = rw- = 4+2
+
+5 = r-x = 4+1
+
+4 = r--
+</div></code></pre>
+<p>Examples:</p>
+<pre class="hljs"><code><div><span class="hljs-built_in">chmod</span> 777 file.txt
+
+<span class="hljs-built_in">chmod</span> 755 script.sh
+
+<span class="hljs-built_in">chmod</span> 644 data.csv
+
+<span class="hljs-built_in">chmod</span> 600 secret.txt
+</div></code></pre>
+<p>Permission Format:</p>
+<pre class="hljs"><code><div>Owner | Group | Others
+
+755
+
+Owner  = rwx (7)
+Group  = r-x (5)
+Others = r-x (5)
+</div></code></pre>
+<hr>
+<h1 id="26-cron-jobs-scheduling">26. Cron Jobs (Scheduling)</h1>
+<p>Cron Format:</p>
+<pre class="hljs"><code><div>* * * * *
+| | | | |
+| | | | +---- Day of Week (0-7)
+| | | +------ Month (1-12)
+| | +-------- Day of Month (1-31)
+| +---------- Hour (0-23)
++------------ Minute (0-59)
+</div></code></pre>
+<hr>
+<h2 id="open-cron-editor">Open Cron Editor</h2>
+<pre class="hljs"><code><div>crontab -e
+</div></code></pre>
+<p>View Cron Jobs</p>
+<pre class="hljs"><code><div>crontab -l
+</div></code></pre>
+<p>Delete Cron Jobs</p>
+<pre class="hljs"><code><div>crontab -r
+</div></code></pre>
+<hr>
+<h2 id="examples">Examples</h2>
+<p>Run every minute:</p>
+<pre class="hljs"><code><div>* * * * * /home/user/script.sh
+</div></code></pre>
+<p>Every day at 10 PM:</p>
+<pre class="hljs"><code><div>0 22 * * * /home/user/script.sh
+</div></code></pre>
+<p>Every Monday at 9 AM:</p>
+<pre class="hljs"><code><div>0 9 * * 1 /home/user/script.sh
+</div></code></pre>
+<p>Every 5 minutes:</p>
+<pre class="hljs"><code><div>*/5 * * * * /home/user/script.sh
+</div></code></pre>
+<hr>
+<h1 id="27-most-used-commands-in-data-engineering">27. Most Used Commands in Data Engineering</h1>
+<pre class="hljs"><code><div>grep
+awk
+find
+<span class="hljs-built_in">sort</span>
+<span class="hljs-built_in">wc</span>
+<span class="hljs-built_in">head</span>
+<span class="hljs-built_in">tail</span>
+<span class="hljs-built_in">cat</span>
+less
+top
+ps -aux
+<span class="hljs-built_in">kill</span> -9
+<span class="hljs-built_in">nohup</span>
+wget
+tar
+zip
+unzip
+<span class="hljs-built_in">df</span> -h
+<span class="hljs-built_in">du</span> -sh
+crontab
+</div></code></pre>
+<hr>
+<h1 id="data-engineer-daily-workflow">Data Engineer Daily Workflow</h1>
+<pre class="hljs"><code><div><span class="hljs-built_in">tail</span> -f app.log
+
+grep ERROR app.log
+
+grep -i exception app.log
+
+awk <span class="hljs-string">&#x27;{print $1}&#x27;</span> data.csv
+
+<span class="hljs-built_in">sort</span> data.csv
+
+find . -name <span class="hljs-string">&quot;*.csv&quot;</span>
+
+<span class="hljs-built_in">du</span> -sh large_file.csv
+
+<span class="hljs-built_in">df</span> -h
+
+<span class="hljs-built_in">nohup</span> python etl_job.py &amp;
+
+crontab -l
+</div></code></pre>
+
+</body>
+</html>
